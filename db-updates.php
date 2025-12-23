@@ -123,5 +123,10 @@ return [
                 blame_request br
                 LEFT JOIN blame_log bl ON bl.request_id = br.id 
             )");
+    },
+
+    'Inicializa a coluna de metadado para requisições POST' => function ()
+    {
+        __exec("UPDATE blame_log SET metadata = jsonb_set(regexp_replace(metadata::TEXT, '\\\\u0000' ,'', 'g')::JSONB, array['GET'], '[]') WHERE action LIKE 'POST%';");
     }
 ];
